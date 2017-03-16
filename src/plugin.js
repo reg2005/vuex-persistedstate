@@ -51,9 +51,12 @@ export default function createPersistedState ({
   return store => {
     const savedState = getState(key, storage)
     if (typeof savedState === 'object') {
-      store.replaceState(
-        merge({}, store.state, savedState)
-      )
+    // Fix nuxt js conflict - simultaneous replacing state
+      setTimeout(function () {
+          store.replaceState(
+            merge({}, store.state, savedState)
+          );
+       }, 1000)
     }
 
     subscriber(store)((mutation, state) => {
