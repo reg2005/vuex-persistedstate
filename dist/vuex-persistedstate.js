@@ -69,12 +69,14 @@ function createPersistedState (ref) {
 
   return function (store) {
     var savedState = getState(key, storage);
-    //Fix nuxt js conflict - simultaneous replacing state
+    if (typeof savedState === 'object') {
+    // Fix nuxt js conflict - simultaneous replacing state
       setTimeout(function () {
           store.replaceState(
             merge({}, store.state, savedState)
           );
        }, 1000)
+    }
 
     subscriber(store)(function (mutation, state) {
       if (filter(mutation)) {
